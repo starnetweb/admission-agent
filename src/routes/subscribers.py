@@ -29,6 +29,9 @@ async def create_subscriber(
     subscriber = Subscriber(
         name=subscriber_data.name.strip(),
         phone=phone,
+        institutions=subscriber_data.institutions,
+        friend_name=subscriber_data.friend_name,
+        friend_phone=subscriber_data.friend_phone,
         is_active=True
     )
     db.add(subscriber)

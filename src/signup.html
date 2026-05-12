@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nigeria Scholarship & Admissions News</title>
+    <title>Nigeria Admission & Scholarship Alerts</title>
     <style>
         * {
             margin: 0;
@@ -25,7 +25,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             padding: 40px;
         }
@@ -33,6 +33,13 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
+        }
+
+        .header .subtitle {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
         }
 
         .header h1 {
@@ -58,22 +65,49 @@
             font-size: 14px;
         }
 
-        input {
+        .required {
+            color: #e74c3c;
+        }
+
+        input, textarea, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
             font-size: 14px;
+            font-family: inherit;
             transition: border-color 0.3s;
         }
 
-        input:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
 
-        input::placeholder {
+        input::placeholder, textarea::placeholder {
             color: #999;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .help-text {
+            color: #999;
+            margin-top: 5px;
+            display: block;
+            font-size: 13px;
         }
 
         button {
@@ -87,15 +121,12 @@
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
         }
 
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         button:disabled {
@@ -163,23 +194,32 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 Scholarship Alert</h1>
-            <p>Never miss scholarship and admission opportunities in Nigeria</p>
+            <div class="subtitle">🎓 ADMISSIONS FIRST</div>
+            <h1>Admission & Scholarship Alerts</h1>
+            <p>Get instant notifications about university admissions and scholarship opportunities in Nigeria</p>
         </div>
 
         <div class="info">
-            <span class="info-icon">📱</span>
-            Get the latest scholarship and admission news delivered to your WhatsApp daily!
+            <span class="info-icon">📲</span>
+            Receive admission deadlines, scholarship news, and institution updates on WhatsApp - Every day at 8 AM!
         </div>
 
         <form id="signupForm">
+            <div class="section-title">Your Information</div>
+
             <div class="form-group">
-                <label for="name">Full Name *</label>
+                <label for="name">Full Name <span class="required">*</span></label>
                 <input
                     type="text"
                     id="name"
@@ -190,7 +230,7 @@
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number (WhatsApp) *</label>
+                <label for="phone">Phone Number (WhatsApp) <span class="required">*</span></label>
                 <input
                     type="tel"
                     id="phone"
@@ -198,9 +238,43 @@
                     placeholder="+234 (e.g., +2348012345678)"
                     required
                 />
-                <small style="color: #999; margin-top: 5px; display: block;">
-                    Include country code (e.g., +234 for Nigeria)
-                </small>
+                <span class="help-text">Include country code (e.g., +234 for Nigeria)</span>
+            </div>
+
+            <div class="section-title">Institutions of Interest</div>
+
+            <div class="form-group">
+                <label for="institutions">Which institutions interest you?</label>
+                <textarea
+                    id="institutions"
+                    name="institutions"
+                    placeholder="Example: University of Lagos, Covenant University, Babcock University, etc."
+                ></textarea>
+                <span class="help-text">List institutions separated by commas (e.g., UNILAG, UI, OAU)</span>
+            </div>
+
+            <div class="section-title">Refer a Friend</div>
+
+            <div class="form-group">
+                <label for="friendName">Friend's Name (Optional)</label>
+                <input
+                    type="text"
+                    id="friendName"
+                    name="friendName"
+                    placeholder="Enter your friend's full name"
+                />
+                <span class="help-text">Help a friend get admission alerts too</span>
+            </div>
+
+            <div class="form-group">
+                <label for="friendPhone">Friend's Phone Number (Optional)</label>
+                <input
+                    type="tel"
+                    id="friendPhone"
+                    name="friendPhone"
+                    placeholder="+234 (e.g., +2348012345678)"
+                />
+                <span class="help-text">We'll send them an invitation to join</span>
             </div>
 
             <div class="loading" id="loading">
@@ -208,7 +282,7 @@
                 Signing you up...
             </div>
 
-            <button type="submit" id="submitBtn">Get Scholarship Alerts</button>
+            <button type="submit" id="submitBtn">Get Admission Alerts Now</button>
         </form>
 
         <div class="message" id="message"></div>
@@ -225,8 +299,10 @@
 
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
+            const institutions = document.getElementById('institutions').value.trim();
+            const friendName = document.getElementById('friendName').value.trim();
+            const friendPhone = document.getElementById('friendPhone').value.trim();
 
-            // Validate
             if (!name) {
                 showMessage('Please enter your name', 'error');
                 return;
@@ -237,32 +313,58 @@
                 return;
             }
 
-            // Show loading
+            if ((friendName && !friendPhone) || (!friendName && friendPhone)) {
+                showMessage('Please provide both friend name and phone number, or leave both empty', 'error');
+                return;
+            }
+
             loadingDiv.style.display = 'block';
             submitBtn.disabled = true;
             messageDiv.style.display = 'none';
 
             try {
-                const response = await fetch('/api/subscribers/', {
+                const userResponse = await fetch('/api/subscribers/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         name: name,
-                        phone: phone
+                        phone: phone,
+                        institutions: institutions || null,
+                        friend_name: friendName || null,
+                        friend_phone: friendPhone || null
                     })
                 });
 
-                const data = await response.json();
+                const userData = await userResponse.json();
 
-                if (response.ok) {
+                if (userResponse.ok) {
+                    if (friendName && friendPhone) {
+                        try {
+                            await fetch('/api/subscribers/', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    name: friendName,
+                                    phone: friendPhone,
+                                    institutions: institutions || null
+                                })
+                            });
+                        } catch (error) {
+                            console.log('Friend subscription note: ' + error);
+                        }
+                    }
+
                     showMessage(
-                        'Success! You will receive scholarship news on WhatsApp daily at 8 AM.',
+                        'Success! You will receive admission alerts on WhatsApp daily at 8 AM. ' +
+                        (friendName ? 'Your friend has also been added!' : ''),
                         'success'
                     );
                     form.reset();
-                } else if (response.status === 400) {
+                } else if (userResponse.status === 400) {
                     showMessage('This phone number is already registered', 'error');
                 } else {
                     showMessage('Something went wrong. Please try again.', 'error');
