@@ -51,6 +51,12 @@ async def signup_page():
     with open(signup_html_path, "r") as f:
         return f.read()
 
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_dashboard():
+    dashboard_path = os.path.join(os.path.dirname(__file__), "admin_dashboard.html")
+    with open(dashboard_path, "r") as f:
+        return f.read()
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=3000)
