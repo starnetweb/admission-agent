@@ -34,7 +34,11 @@ def stop_scheduler():
 def run_news_agent():
     logger.info("Starting news agent...")
     try:
-        asyncio.run(fetch_and_distribute_news())
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            asyncio.create_task(fetch_and_distribute_news())
+        else:
+            asyncio.run(fetch_and_distribute_news())
     except Exception as e:
         logger.error(f"Error in news agent: {e}")
 
