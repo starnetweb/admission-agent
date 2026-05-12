@@ -29,6 +29,7 @@ services:
       WEBHOOK_TOKEN: ${WEBHOOK_TOKEN:-your-secret-token}
     ports:
       - "3000:3000"
+      - "8000:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -40,11 +41,9 @@ services:
     image: nginx:alpine
     container_name: scholarship_nginx
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
     volumes:
       - ./nginx-conf.d:/etc/nginx/conf.d:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - app
     networks:
