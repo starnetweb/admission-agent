@@ -379,7 +379,9 @@
                 const data = await response.json();
 
                 const newsList = document.getElementById('newsList');
-                const articles = data.news || [];
+                const articles = Array.isArray(data) ? data : (data.news || []);
+
+                console.log('Loaded articles:', articles.length);
 
                 if (articles.length === 0) {
                     newsList.innerHTML = `
@@ -391,23 +393,33 @@
                     return;
                 }
 
-                newsList.innerHTML = articles.map(article => `
-                    <div class="news-item">
-                        <div class="news-title">${escapeHtml(article.title || 'Untitled')}</div>
-                        <div class="news-description">${escapeHtml(article.description ? article.description.substring(0, 300) : 'No description available')}</div>
-                        <div class="news-meta">
-                            <span>📰 ${escapeHtml(article.source || 'Unknown Source')}</span>
-                            <span>🏷️ ${escapeHtml(article.category || 'admission')}</span>
-                            ${article.published_at ? `<span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>` : '<span>📅 Just now</span>'}
+                newsList.innerHTML = articles.map((article, index) => {
+                    const title = article.title || 'Untitled';
+                    const description = article.description ? article.description.substring(0, 300) : 'No description available';
+                    const source = article.source || 'Unknown Source';
+                    const category = article.category || 'admission';
+                    const url = article.url || '#';
+                    const date = article.published_at ? new Date(article.published_at).toLocaleDateString() : 'Just now';
+
+                    return `
+                        <div class="news-item">
+                            <div class="news-title">${escapeHtml(title)}</div>
+                            <div class="news-description">${escapeHtml(description)}</div>
+                            <div class="news-meta">
+                                <span>📰 ${escapeHtml(source)}</span>
+                                <span>🏷️ ${escapeHtml(category)}</span>
+                                <span>📅 ${date}</span>
+                            </div>
+                            <a href="${escapeHtml(url)}" target="_blank" class="news-url">Read Full Article →</a>
                         </div>
-                        <a href="${escapeHtml(article.url)}" target="_blank" class="news-url">Read Full Article →</a>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 document.getElementById('lastUpdated').textContent =
                     `Last updated: ${new Date().toLocaleString()}`;
             } catch (error) {
                 console.error('Error loading news:', error);
+                document.getElementById('newsList').innerHTML = `<div class="empty-state"><p>Error loading news: ${error.message}</p></div>`;
             }
         }
 
