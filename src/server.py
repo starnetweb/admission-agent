@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from contextlib import asynccontextmanager
 import logging
+import os
 
 from src.database import init_db
 from src.agent import start_scheduler, stop_scheduler
@@ -36,6 +38,18 @@ app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 @app.get("/health")
 async def health():
     return {"status": "healthy"}
+
+@app.get("/", response_class=HTMLResponse)
+async def signup_form():
+    signup_html_path = os.path.join(os.path.dirname(__file__), "signup.html")
+    with open(signup_html_path, "r") as f:
+        return f.read()
+
+@app.get("/signup", response_class=HTMLResponse)
+async def signup_page():
+    signup_html_path = os.path.join(os.path.dirname(__file__), "signup.html")
+    with open(signup_html_path, "r") as f:
+        return f.read()
 
 if __name__ == "__main__":
     import uvicorn

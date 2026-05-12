@@ -18,16 +18,17 @@ async def create_subscriber(
 ):
     """Create a new subscriber"""
 
+    phone = subscriber_data.phone.strip()
     existing = db.query(Subscriber).filter(
-        Subscriber.phone == subscriber_data.phone
+        Subscriber.phone == phone
     ).first()
 
     if existing:
         raise HTTPException(status_code=400, detail="Phone number already registered")
 
     subscriber = Subscriber(
-        name=subscriber_data.name,
-        phone=subscriber_data.phone,
+        name=subscriber_data.name.strip(),
+        phone=phone,
         is_active=True
     )
     db.add(subscriber)
