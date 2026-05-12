@@ -393,14 +393,14 @@
 
                 newsList.innerHTML = articles.map(article => `
                     <div class="news-item">
-                        <div class="news-title">${escapeHtml(article.title)}</div>
-                        <div class="news-description">${escapeHtml(article.description || 'No description available')}</div>
+                        <div class="news-title">${escapeHtml(article.title || 'Untitled')}</div>
+                        <div class="news-description">${escapeHtml(article.description ? article.description.substring(0, 300) : 'No description available')}</div>
                         <div class="news-meta">
                             <span>📰 ${escapeHtml(article.source || 'Unknown Source')}</span>
-                            <span>🏷️ ${escapeHtml(article.category)}</span>
-                            ${article.published_at ? `<span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>` : ''}
+                            <span>🏷️ ${escapeHtml(article.category || 'admission')}</span>
+                            ${article.published_at ? `<span>📅 ${new Date(article.published_at).toLocaleDateString()}</span>` : '<span>📅 Just now</span>'}
                         </div>
-                        <a href="${article.url}" target="_blank" class="news-url">Read Full Article →</a>
+                        <a href="${escapeHtml(article.url)}" target="_blank" class="news-url">Read Full Article →</a>
                     </div>
                 `).join('');
 
