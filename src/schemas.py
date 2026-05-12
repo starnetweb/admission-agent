@@ -5,9 +5,8 @@ from typing import Optional
 class SubscriberCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     phone: str = Field(..., min_length=10, max_length=20)
+    interests: Optional[str] = None
     institutions: Optional[str] = None
-    friend_name: Optional[str] = None
-    friend_phone: Optional[str] = None
 
 class SubscriberUpdate(BaseModel):
     name: Optional[str] = None
@@ -17,9 +16,8 @@ class SubscriberResponse(BaseModel):
     id: int
     name: str
     phone: str
+    interests: Optional[str]
     institutions: Optional[str]
-    friend_name: Optional[str]
-    friend_phone: Optional[str]
     is_active: bool
     created_at: datetime
     updated_at: Optional[datetime]
